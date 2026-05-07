@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment Acquirer Data -->
+    
+    <!-- Telebirr Payment Acquirer -->
+    <record id="payment_acquirer_telebirr" model="payment.acquirer">
+        <field name="name">Telebirr</field>
+        <field name="provider">telebirr</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="state">test</field>
+        <field name="description">Telebirr Mobile Payment Gateway</field>
+        <field name="image_128" type="base64" file="telebirr_payment/static/description/icon.png"/>
+        <field name="allow_partial_payment">True</field>
+        <field name="payment_timeout">120</field>
+        <field name="auto_reconcile">True</field>
+        <field name="website_published">True</field>
+    </record>
+    
+    <!-- Payment Method Line for Telebirr -->
+    <record id="payment_method_line_telebirr" model="account.payment.method.line">
+        <field name="name">Telebirr</field>
+        <field name="payment_acquirer_id" ref="payment_acquirer_telebirr"/>
+        <field name="payment_type">inbound</field>
+        <field name="journal_id" ref="account.bank_journal"/>
+    </record>
+    
+    <!-- Payment Method for Telebirr -->
+    <record id="payment_method_telebirr" model="account.payment.method">
+        <field name="name">Telebirr</field>
+        <field name="code">telebirr</field>
+        <field name="payment_type">inbound</field>
+        <field name="bank_account_required">False</field>
+        <field name="active">True</field>
+    </record>
+    
+</odoo>

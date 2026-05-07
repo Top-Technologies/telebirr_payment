@@ -2,4 +2,5 @@
 
 from . import telebirr_config
 from . import telebirr_transaction
-from . import payment_acquirer
+from . import sales_order_inherit
+from . import account_move_inherit

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Telebirr Transaction Views -->
+    
+    <!-- Transaction List View -->
+    <record id="view_telebirr_transaction_list" model="ir.ui.view">
+        <field name="name">telebirr.transaction.list</field>
+        <field name="model">telebirr.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Telebirr Transactions">
+                <field name="merch_order_id"/>
+                <field name="partner_id"/>
+                <field name="amount" widget="monetary"/>
+                <field name="currency"/>
+                <field name="status"/>
+                <field name="payment_time"/>
+                <field name="create_time"/>
+                <field name="sales_order_id" optional="show"/>
+                <field name="invoice_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <button name="action_check_status" type="object" string="Check Status" 
+                        icon="fa-refresh"/>
+                <button name="action_view_payment" type="object" string="View Payment" 
+                        icon="fa-money"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Transaction Form View -->
+    <record id="view_telebirr_transaction_form" model="ir.ui.view">
+        <field name="name">telebirr.transaction.form</field>
+        <field name="model">telebirr.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Telebirr Transaction" create="false" edit="false">
+                <header>
+                    <button name="action_check_status" type="object" string="Check Status" 
+                            class="btn-primary" icon="fa-refresh"/>
+                    <button name="action_view_payment" type="object" string="View Payment" 
+                            class="btn-info" icon="fa-money"/>
+                    <button name="action_open_checkout" type="object" string="Open Checkout" 
+                            class="btn-secondary" icon="fa-external-link"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="merch_order_id" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info" string="Basic Information">
+                            <field name="partner_id" readonly="1"/>
+                            <field name="amount" readonly="1" widget="monetary"/>
+                            <field name="currency" readonly="1"/>
+                            <field name="create_time" readonly="1"/>
+                            <field name="payment_time" readonly="1"/>
+                            <field name="expiration_time" readonly="1"/>
+                        </group>
+                        
+                        <group name="related_docs" string="Related Documents">
+                            <field name="sales_order_id" readonly="1"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="payment_id" readonly="1"/>
+                            <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Payment Details" name="payment_details">
+                            <group>
+                                <field name="title" readonly="1"/>
+                                <field name="customer_phone" readonly="1"/>
+                                <field name="config_id" readonly="1"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Telebirr Response" name="telebirr_response">
+                            <group>
+                                <field name="prepay_id" readonly="1"/>
+                                <field name="payment_order_id" readonly="1"/>
+                                <field name="checkout_url" readonly="1" widget="url"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Error Information" name="error_info">
+                            <group>
+                                <field name="error_message" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Debug Information" name="debug_info" groups="base.group_system">
+                            <group>
+                                <field name="raw_request" readonly="1" widget="text"/>
+                                <field name="raw_response" readonly="1" widget="text"/>
+                                <field name="notes" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Transaction Search View -->
+    <record id="view_telebirr_transaction_search" model="ir.ui.view">
+        <field name="name">telebirr.transaction.search</field>
+        <field name="model">telebirr.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Telebirr Transactions">
+                <field name="merch_order_id"/>
+                <field name="partner_id"/>
+                <field name="sales_order_id"/>
+                <field name="invoice_id"/>
+                <field name="prepay_id"/>
+                <field name="payment_order_id"/>
+                <field name="status"/>
+                <field name="create_time"/>
+                <field name="payment_time"/>
+                
+                <filter string="Draft" name="draft" domain="[('status', '=', 'draft')]"/>
+                <filter string="Waiting Payment" name="waiting_payment" domain="[('status', '=', 'WAIT_PAY')]"/>
+                <filter string="Payment in Progress" name="payment_progress" domain="[('status', '=', 'PAYING')]"/>
+                <filter string="Payment Successful" name="payment_success" domain="[('status', '=', 'PAY_SUCCESS')]"/>
+                <filter string="Payment Failed" name="payment_failed" domain="[('status', '=', 'PAY_FAILED')]"/>
+                <filter string="Order Closed" name="order_closed" domain="[('status', '=', 'ORDER_CLOSED')]"/>
+                <filter string="Refunded" name="refunded" domain="[('status', '=', 'REFUNDED')]"/>
+                
+                <separator/>
+                <filter string="Today" name="today" domain="[('create_time', '>=', context_today())]"/>
+                <filter string="This Week" name="this_week" domain="[('create_time', '>=', context_today() - datetime.timedelta(days=7))]"/>
+                <filter string="This Month" name="this_month" domain="[('create_time', '>=', context_today().replace(day=1))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Create Date" name="group_create_date" context="{'group_by': 'create_time:day'}"/>
+                    <filter string="Payment Date" name="group_payment_date" context="{'group_by': 'payment_time:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Transaction Action -->
+    <record id="action_telebirr_transaction" model="ir.actions.act_window">
+        <field name="name">Telebirr Transactions</field>
+        <field name="res_model">telebirr.transaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_telebirr_transaction_list"/>
+        <field name="search_view_id" ref="view_telebirr_transaction_search"/>
+        <field name="help">View and manage Telebirr payment transactions</field>
+    </record>
+    
+    <!-- Transaction Menu Item -->
+    <menuitem id="menu_telebirr_transaction" name="Transactions" parent="menu_telebirr_root" action="action_telebirr_transaction" sequence="20"/>
+    
+</odoo>

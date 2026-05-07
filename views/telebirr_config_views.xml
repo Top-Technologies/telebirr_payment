@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Telebirr Configuration Views -->
+    
+    <!-- Configuration List View -->
+    <record id="view_telebirr_config_list" model="ir.ui.view">
+        <field name="name">telebirr.config.list</field>
+        <field name="model">telebirr.config</field>
+        <field name="arch" type="xml">
+            <list string="Telebirr Configurations">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="environment"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="is_connection_ok" widget="boolean_toggle"/>
+                <field name="last_test_time"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Configuration Form View -->
+    <record id="view_telebirr_config_form" model="ir.ui.view">
+        <field name="name">telebirr.config.form</field>
+        <field name="model">telebirr.config</field>
+        <field name="arch" type="xml">
+            <form string="Telebirr Configuration">
+                <header>
+                    <button name="action_test_connection" type="object" string="Test Connection" 
+                            class="btn-primary" icon="fa-plug"/>
+                </header>
+                <sheet>
+                    <group string="Basic Information">
+                        <field name="name" placeholder="e.g., Default Configuration"/>
+                        <field name="environment" widget="radio"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    
+                    <group string="API Credentials">
+                        <field name="fabric_app_id" placeholder="Fabric App ID from Telebirr"/>
+                        <field name="app_secret" password="True" placeholder="App Secret from Telebirr"/>
+                        <field name="merchant_app_id" placeholder="Merchant App ID"/>
+                        <field name="merchant_code" placeholder="Merchant Code"/>
+                    </group>
+                    
+                    <group string="RSA Keys">
+                        <field name="private_key" placeholder="Paste RSA private key (PEM format)"/>
+                        <field name="public_key" placeholder="Paste RSA public key (PEM format)"/>
+                    </group>
+                    
+                    <group string="URL Settings">
+                        <field name="webhook_url" placeholder="http://localhost:8071/telebirr/webhook/payment"/>
+                        <field name="redirect_url" placeholder="Optional: URL after successful payment"/>
+                    </group>
+                    
+                    <group string="Payment Settings">
+                        <field name="timeout_express"/>
+                    </group>
+                    
+                    <group string="Connection Status">
+                        <field name="last_test_time" readonly="1"/>
+                        <field name="last_test_result" readonly="1" widget="text"/>
+                        <field name="is_connection_ok" readonly="1" widget="boolean_toggle"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Configuration Action -->
+    <record id="action_telebirr_config" model="ir.actions.act_window">
+        <field name="name">Telebirr Configurations</field>
+        <field name="res_model">telebirr.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_telebirr_config_list"/>
+        <field name="help">Manage Telebirr payment gateway configurations</field>
+    </record>
+    
+    <!-- Menu Item -->
+    <menuitem id="menu_telebirr_config" name="Configurations" parent="menu_telebirr_root" action="action_telebirr_config" sequence="10"/>
+    
+</odoo>

@@ -166,29 +166,30 @@ class TelebirrTransaction(models.Model):
             else:
                 transaction.time_remaining = f"{minutes}m"
     
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
         Override create to generate merchant order ID
         
         Args:
-            vals: Dictionary of field values
+            vals_list: List of dictionaries of field values
             
         Returns:
-            Created transaction record
+            Created transaction record(s)
         """
-        # Generate unique merchant order ID if not provided
-        if 'merch_order_id' not in vals or not vals['merch_order_id']:
-            vals['merch_order_id'] = self._generate_merchant_order_id()
+        for vals in vals_list:
+            # Generate unique merchant order ID if not provided
+            if 'merch_order_id' not in vals or not vals['merch_order_id']:
+                vals['merch_order_id'] = self._generate_merchant_order_id()
+            
+            # Set expiration time if not provided
+            if 'expiration_time' not in vals and vals.get('config_id'):
+                config = self.env['telebirr.config'].browse(vals['config_id'])
+                if config.timeout_express:
+                    expiration_time = datetime.now() + timedelta(minutes=config.timeout_express)
+                    vals['expiration_time'] = expiration_time
         
-        # Set expiration time if not provided
-        if 'expiration_time' not in vals and vals.get('config_id'):
-            config = self.env['telebirr.config'].browse(vals['config_id'])
-            if config.timeout_express:
-                expiration_time = datetime.now() + timedelta(minutes=config.timeout_express)
-                vals['expiration_time'] = expiration_time
-        
-        return super().create(vals)
+        return super().create(vals_list)
     
     def _generate_merchant_order_id(self):
         """

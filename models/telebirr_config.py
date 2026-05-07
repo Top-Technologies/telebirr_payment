@@ -33,7 +33,7 @@ class TelebirrConfig(models.Model):
     # API Credentials
     fabric_app_id = fields.Char('Fabric App ID', required=True,
                                help='X-APP-Key provided by Telebirr (Fabric App ID)')
-    app_secret = fields.Char('App Secret', required=True, encrypted=True,
+    app_secret = fields.Char('App Secret', required=True,
                            size=256,
                            help='App Secret provided by Telebirr for authentication')
     merchant_app_id = fields.Char('Merchant App ID', required=True, size=64,
@@ -42,7 +42,7 @@ class TelebirrConfig(models.Model):
                               help='Short code registered by merchant with Telebirr')
     
     # RSA Keys for Signature
-    private_key = fields.Text('Private Key', required=True, encrypted=True,
+    private_key = fields.Text('Private Key', required=True,
                             help='RSA private key for signing API requests (PEM format)')
     public_key = fields.Text('Public Key', help='RSA public key for webhook verification (PEM format)')
     

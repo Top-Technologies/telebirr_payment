@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template Data -->
+    
+    <!-- Payment Success Email Template -->
+    <record id="email_template_telebirr_payment_success" model="mail.template">
+        <field name="name">Telebirr Payment Success</field>
+        <field name="model_id" ref="model_telebirr_transaction"/>
+        <field name="subject">Payment Confirmation - ${object.merch_order_id}</field>
+        <field name="email_from">${object.company_id.email}</field>
+        <field name="email_to">${object.partner_id.email}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete">True</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #2E7D32; color: white; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 24px;">Payment Confirmation</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 16px;">Your payment has been successfully processed</p>
+                </div>
+                
+                <div style="padding: 30px; background-color: #f9f9f9;">
+                    <p>Dear ${object.partner_id.name},</p>
+                    
+                    <p>We're pleased to confirm that your payment has been successfully processed through Telebirr.</p>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #2E7D32;">Payment Details</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Transaction ID:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.merch_order_id}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Amount:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.amount} ${object.currency}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Payment Date:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.payment_time.strftime('%Y-%m-%d %H:%M:%S') if object.payment_time else 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Description:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.title}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <p>Thank you for your payment. If you have any questions, please contact our support team.</p>
+                    
+                    <p>Best regards,<br/>
+                    ${object.company_id.name}</p>
+                </div>
+                
+                <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 12px; color: #666;">
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                </div>
+            </div>
+        ]]></field>
+    </record>
+    
+    <!-- Payment Failed Email Template -->
+    <record id="email_template_telebirr_payment_failed" model="mail.template">
+        <field name="name">Telebirr Payment Failed</field>
+        <field name="model_id" ref="model_telebirr_transaction"/>
+        <field name="subject">Payment Failed - ${object.merch_order_id}</field>
+        <field name="email_from">${object.company_id.email}</field>
+        <field name="email_to">${object.partner_id.email}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete">True</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #D32F2F; color: white; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 24px;">Payment Failed</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 16px;">Your payment could not be processed</p>
+                </div>
+                
+                <div style="padding: 30px; background-color: #f9f9f9;">
+                    <p>Dear ${object.partner_id.name},</p>
+                    
+                    <p>We're sorry to inform you that your payment could not be processed through Telebirr.</p>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #D32F2F;">Payment Details</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Transaction ID:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.merch_order_id}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Amount:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.amount} ${object.currency}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Status:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.status}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Description:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.title}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <p>Please try again or contact our support team if the issue persists.</p>
+                    
+                    <p>Best regards,<br/>
+                    ${object.company_id.name}</p>
+                </div>
+                
+                <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 12px; color: #666;">
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                </div>
+            </div>
+        ]]></field>
+    </record>
+    
+    <!-- Refund Success Email Template -->
+    <record id="email_template_telebirr_refund_success" model="mail.template">
+        <field name="name">Telebirr Refund Success</field>
+        <field name="model_id" ref="model_telebirr_transaction"/>
+        <field name="subject">Refund Confirmation - ${object.merch_order_id}</field>
+        <field name="email_from">${object.company_id.email}</field>
+        <field name="email_to">${object.partner_id.email}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete">True</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #1976D2; color: white; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 24px;">Refund Confirmation</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 16px;">Your refund has been processed</p>
+                </div>
+                
+                <div style="padding: 30px; background-color: #f9f9f9;">
+                    <p>Dear ${object.partner_id.name},</p>
+                    
+                    <p>We're pleased to confirm that your refund has been successfully processed through Telebirr.</p>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #1976D2;">Refund Details</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Refund ID:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.merch_order_id}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Refund Amount:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${abs(object.amount)} ${object.currency}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Refund Date:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.payment_time.strftime('%Y-%m-%d %H:%M:%S') if object.payment_time else 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Description:</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${object.title}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <p>The refund amount will be credited to your Telebirr account within 2-3 business days.</p>
+                    
+                    <p>Thank you for your patience. If you have any questions, please contact our support team.</p>
+                    
+                    <p>Best regards,<br/>
+                    ${object.company_id.name}</p>
+                </div>
+                
+                <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 12px; color: #666;">
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                </div>
+            </div>
+        ]]></field>
+    </record>
+    
+</odoo>

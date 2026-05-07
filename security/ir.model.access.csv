@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_telebirr_config_user,telebirr.config.user,model_telebirr_config,account.group_account_user,1,0,0,0
+access_telebirr_config_manager,telebirr.config.manager,model_telebirr_config,account.group_account_manager,1,1,1,1
+access_telebirr_transaction_user,telebirr.transaction.user,model_telebirr_transaction,account.group_account_user,1,0,0,0
+access_telebirr_transaction_manager,telebirr.transaction.manager,model_telebirr_transaction,account.group_account_manager,1,1,1,1
+access_telebirr_payment_wizard_user,telebirr.payment.wizard.user,model_telebirr_payment_wizard,base.group_user,1,1,1,0

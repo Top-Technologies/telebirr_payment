@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Scheduled Actions -->
+    
+    <!-- Cleanup Expired Transactions -->
+    <record id="ir_cron_cleanup_expired_transactions" model="ir.cron">
+        <field name="name">Cleanup Expired Telebirr Transactions</field>
+        <field name="model_id" ref="model_telebirr_transaction"/>
+        <field name="state">code</field>
+        <field name="code">model.cleanup_expired_transactions()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="call_count">-1</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="priority">5</field>
+    </record>
+    
+    <!-- Check Pending Transactions -->
+    <record id="ir_cron_check_pending_transactions" model="ir.cron">
+        <field name="name">Check Pending Telebirr Transactions</field>
+        <field name="model_id" ref="model_telebirr_transaction"/>
+        <field name="state">code</field>
+        <field name="code">
+pending_transactions = model.search([('status', 'in', ['WAIT_PAY', 'PAYING'])])
+for transaction in pending_transactions:
+    try:
+        transaction.action_check_status()
+    except Exception:
+        pass
+        </field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="call_count">-1</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="priority">10</field>
+    </record>
+    
+    <!-- Refresh Fabric Tokens -->
+    <record id="ir_cron_refresh_fabric_tokens" model="ir.cron">
+        <field name="name">Refresh Telebirr Fabric Tokens</field>
+        <field name="model_id" ref="model_telebirr_config"/>
+        <field name="state">code</field>
+        <field name="code">
+configs = model.search([('active', '=', True)])
+for config in configs:
+    try:
+        env['telebirr.fabric.token.service'].refresh_token(config)
+    except Exception:
+        pass
+        </field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="call_count">-1</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="priority">15</field>
+    </record>
+    
+</odoo>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment Wizard Views -->
+    
+    <!-- Payment Wizard Form View -->
+    <record id="view_telebirr_payment_wizard_form" model="ir.ui.view">
+        <field name="name">telebirr.payment.wizard.form</field>
+        <field name="model">telebirr.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Telebirr Payment">
+                <header>
+                    <button name="action_initiate_payment" type="object" string="Initiate Payment" 
+                            class="btn-primary" icon="fa-credit-card" 
+                            invisible="state != 'draft'"/>
+                    <button name="action_open_checkout" type="object" string="Open Checkout" 
+                            class="btn-info" icon="fa-external-link" 
+                            invisible="checkout_url == False"/>
+                    <button name="action_check_payment_status" type="object" string="Check Status" 
+                            class="btn-secondary" icon="fa-refresh" 
+                            invisible="state == 'draft'"/>
+                    <button name="action_view_transaction" type="object" string="View Transaction" 
+                            class="btn-secondary" icon="fa-list" 
+                            invisible="transaction_id == False"/>
+                    <button name="action_copy_payment_link" type="object" string="Copy Link" 
+                            class="btn-warning" icon="fa-copy" 
+                            invisible="checkout_url == False"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processed,error"/>
+                </header>
+                
+                <sheet>
+                    <!-- Draft State -->
+                    <div invisible="state != 'draft'" class="row">
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                <h4><i class="fa fa-info-circle"/> Payment Information</h4>
+                                <p>Review the payment details below and click "Initiate Payment" to create a Telebirr payment request.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Processed State -->
+                    <div invisible="state != 'processed'" class="row">
+                        <div class="col-12">
+                            <div class="alert alert-success" role="alert">
+                                <h4><i class="fa fa-check-circle"/> Payment Request Created</h4>
+                                <p>Payment request has been created successfully. You can:</p>
+                                <ul>
+                                    <li>Open the checkout page for the customer</li>
+                                    <li>Copy the payment link to share</li>
+                                    <li>Check payment status</li>
+                                    <li>View transaction details</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Error State -->
+                    <div invisible="state != 'error'" class="row">
+                        <div class="col-12">
+                            <div class="alert alert-danger" role="alert">
+                                <h4><i class="fa fa-exclamation-triangle"/> Payment Failed</h4>
+                                <p><field name="error_message" readonly="1"/></p>
+                                <p>You can retry the payment or contact support if the issue persists.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Details -->
+                    <group string="Payment Details">
+                        <group>
+                            <field name="res_name" readonly="1" string="Document"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="currency_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="payment_title"/>
+                            <field name="customer_phone" placeholder="Auto-filled from customer"/>
+                            <field name="config_id" required="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Checkout Information (shown after processing) -->
+                    <group string="Checkout Information" invisible="checkout_url == False">
+                        <group>
+                            <field name="transaction_id" readonly="1"/>
+                            <field name="checkout_url" widget="url" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Additional Information -->
+                    <group string="Additional Information">
+                        <group>
+                            <field name="notes" placeholder="Add any additional notes about this payment..."/>
+                        </group>
+                    </group>
+                </sheet>
+                
+                <!-- Footer Actions -->
+                <footer>
+                    <button name="action_retry_payment" type="object" string="Retry Payment" 
+                            class="btn-warning" icon="fa-redo" 
+                            invisible="state in ('draft', 'processed')"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Payment Wizard Form View (Simplified for Sales Order) -->
+    <record id="view_telebirr_payment_wizard_form_simple" model="ir.ui.view">
+        <field name="name">telebirr.payment.wizard.form.simple</field>
+        <field name="model">telebirr.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Telebirr Payment">
+                <header>
+                    <button name="action_initiate_payment" type="object" string="Initiate Payment" 
+                            class="btn-primary" icon="fa-credit-card" 
+                            invisible="state != 'draft'"/>
+                    <button name="action_open_checkout" type="object" string="Open Checkout" 
+                            class="btn-info" icon="fa-external-link" 
+                            invisible="checkout_url == False"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processed,error"/>
+                </header>
+                
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="amount" widget="monetary"/>
+                            <field name="customer_phone" placeholder="Customer phone number"/>
+                        </group>
+                        <group>
+                            <field name="config_id" required="1"/>
+                            <field name="payment_title"/>
+                        </group>
+                    </group>
+                    
+                    <group invisible="checkout_url == False">
+                        <field name="checkout_url" widget="url" readonly="1"/>
+                    </group>
+                </sheet>
+                
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+</odoo>

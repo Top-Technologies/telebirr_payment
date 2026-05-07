@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Telebirr Payment Templates -->
+    
+    <!-- Sales Order Form Button -->
+    <template id="view_sales_order_form_inherit_telebirr" inherit_id="sale.view_order_form">
+        <xpath expr="//field[@name='state']/.." position="inside">
+            <button name="action_telebirr_payment_wizard" 
+                    type="object" string="Telebirr Payment Request" 
+                    class="btn-primary" 
+                    invisible="state not in ('sale', 'done')"
+                    icon="fa-credit-card"/>
+        </xpath>
+    </template>
+    
+    <!-- Invoice Form Button -->
+    <template id="view_invoice_form_inherit_telebirr" inherit_id="account.view_move_form">
+        <xpath expr="//field[@name='state']/.." position="inside">
+            <button name="action_telebirr_payment_wizard" 
+                    type="object" string="Telebirr Payment Request" 
+                    class="btn-primary" 
+                    invisible="state != 'posted' or payment_state == 'paid'"
+                    icon="fa-credit-card"/>
+        </xpath>
+    </template>
+    
+</odoo>
