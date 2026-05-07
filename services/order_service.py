@@ -455,7 +455,7 @@ class TelebirrOrderService(models.AbstractModel):
         try:
             # Query order status
             from ..services.query_service import TelebirrQueryService
-            query_service = TelebirrQueryService(self.env)
+            query_service = self.env['telebirr.query.service']
             result = query_service.query_order(config, merch_order_id)
             
             if result.get('result') != 'SUCCESS':

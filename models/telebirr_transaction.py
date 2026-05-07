@@ -227,7 +227,7 @@ class TelebirrTransaction(models.Model):
             # Import service to avoid circular imports
             from ..services.query_service import TelebirrQueryService
             
-            query_service = TelebirrQueryService(self.env)
+            query_service = self.env['telebirr.query.service']
             result = query_service.query_order(self.config_id, self.merch_order_id)
             
             # Process status update

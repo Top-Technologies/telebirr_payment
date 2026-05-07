@@ -162,7 +162,7 @@ class TelebirrConfig(models.Model):
             from ..services.fabric_token_service import TelebirrFabricTokenService
             
             # Test connection by getting fabric token
-            token_service = TelebirrFabricTokenService(self.env)
+            token_service = self.env['telebirr.fabric.token.service']
             result = token_service.get_fabric_token(self)
             
             # Update test result
