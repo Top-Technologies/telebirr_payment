@@ -20,6 +20,11 @@ class SaleOrder(models.Model):
         if self.state not in ['sale', 'done']:
             raise UserError(_("Sales order must be confirmed or done to request payment"))
         
+        # Get default Telebirr configuration
+        config = self.env['telebirr.config'].get_default_config()
+        if not config:
+            raise UserError(_("No Telebirr configuration found. Please configure Telebirr settings first."))
+        
         # Create payment wizard
         wizard = self.env['telebirr.payment.wizard'].create({
             'res_model': 'sale.order',
@@ -29,6 +34,7 @@ class SaleOrder(models.Model):
             'currency_id': self.currency_id.id,
             'payment_title': _('Payment for Sales Order %s') % self.name,
             'customer_phone': self.partner_id.phone or self.partner_id.mobile,
+            'config_id': config.id,
         })
         
         return {

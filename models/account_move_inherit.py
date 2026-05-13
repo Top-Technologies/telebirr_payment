@@ -23,6 +23,11 @@ class AccountMove(models.Model):
         if self.payment_state == 'paid':
             raise UserError(_("Invoice is already paid"))
         
+        # Get default Telebirr configuration
+        config = self.env['telebirr.config'].get_default_config()
+        if not config:
+            raise UserError(_("No Telebirr configuration found. Please configure Telebirr settings first."))
+        
         # Create payment wizard
         wizard = self.env['telebirr.payment.wizard'].create({
             'res_model': 'account.move',
@@ -32,6 +37,7 @@ class AccountMove(models.Model):
             'currency_id': self.currency_id.id,
             'payment_title': _('Payment for Invoice %s') % self.name,
             'customer_phone': self.partner_id.phone or self.partner_id.mobile,
+            'config_id': config.id,
         })
         
         return {
